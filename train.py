@@ -14,6 +14,7 @@ def parse_opt():
     parser.add_argument('--seed', type=str, default=999)
     parser.add_argument('--batch_size', type=str, default=16)
     parser.add_argument('--img_size', type=str, default=224)
+    parser.add_argument('--num_samples', type=str, default=4)
     
     #network
     parser.add_argument('--base', type=str, default=64)
@@ -41,7 +42,9 @@ def main(opt):
         optimizers.Adam(learning_rate=opt.lr, beta_1=opt.beta_1, beta_2=opt.beta_2),
         optimizers.Adam(learning_rate=opt.lr, beta_1=opt.beta_1, beta_2=opt.beta_2)
     ])
-    callbacks = create_callbacks(opt)
+    
+    sample= next(iter(ds_val.take(1)))
+    callbacks = create_callbacks(opt, sample)
     
     adaptfcn.fit(
         x=ds_train,
