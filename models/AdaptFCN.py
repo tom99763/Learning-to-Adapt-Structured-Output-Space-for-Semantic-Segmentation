@@ -62,14 +62,21 @@ class Discriminator(tf.keras.Model):
 class AdaptFCN(tf.keras.Model):
   def __init__(self, opt):
     super().__init__()
+    self.fcn = FCN(opt)
+    self.disc = Discriminator(opt)
     
-  def call(self, x):
-    return 
+  def call(self, x, training=False):
+    return self.fcn(x, training=training)
   
   @tf.function
   def train_step(self, source, target):
-    return 
+    xs, ms = source
+    xt, mt = target
+    with tf.GradientTape(persistent=True) as tape:
+      ms_pred = self.fcn(xs, True)
+      mt_pred = self.fcn(xt, True)
+    return {}
   
   @tf.function
   def test_step(self, source, target):
-    return 
+    return {}
