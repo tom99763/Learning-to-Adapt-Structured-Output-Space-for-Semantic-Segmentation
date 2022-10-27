@@ -15,7 +15,7 @@ def read_pair(img_pth, mask_pth, img_size):
     mask = tf.image.decode_jpeg(tf.io.read_file(mask_pth), channels=1)
     mask = tf.image.resize(mask, [img_size, img_size])
     mask = tf.cast(mask, 'float32')
-    mask = tf.where(mask == 0., 0., 1.)
+    mask = tf.where(mask == 0., 0., 1.)[..., 0]
     return img, mask
 
 
@@ -99,9 +99,11 @@ class VisualizeCallback(callbacks.Callback):
         self.sample = sample
 
     def on_epoch_end(self, epoch, logs=None):
-        xs, ms, xt, mt = self.sample
-        ms_pred = tf.math.argmax(self.model.fcn(xs[:self.opt.num_samples]), axis=-1, output_type=tf.float32)[..., None]
-        mt_pred = tf.math.argmax(self.model.fcn(xt[:self.opt.num_samples]), axis=-1, output_type=tf.float32)[..., None]
+        source ,target = self.sample
+        xs, ms = source
+        xt, mt = target
+        ms_pred = tf.cast(tf.argmax(self.model.fcn(xs[:self.opt.num_samples]), axis=-1)[..., None], 'float32')
+        mt_pred = tf.cast(tf.argmax(self.model.fcn(xt[:self.opt.num_samples]), axis=-1)[..., None], 'float32')
 
         fig, ax = plt.subplots(nrows=self.opt.num_samples, ncols=4, figsize=(8, 8))
         titles = ['source', 'source pred', 'target', 'target pred']
@@ -115,6 +117,6 @@ class VisualizeCallback(callbacks.Callback):
                 ax[i, j].set_title(titles[j])
 
         if not os.path.exists(f'{self.opt.result_dir}/AdaptFCN_{self.opt.lambda_adv}/results'):
-            os.makedir(f'{self.opt.result_dir}/AdaptFCN_{self.opt.lambda_adv}/results')
+            os.makedirs(f'{self.opt.result_dir}/AdaptFCN_{self.opt.lambda_adv}/results')
 
         plt.savefig(f'{self.opt.result_dir}/AdaptFCN_{self.opt.lambda_adv}/results/{epoch}.png')
