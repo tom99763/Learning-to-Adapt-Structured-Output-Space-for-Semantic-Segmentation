@@ -19,6 +19,13 @@ def parse_opt():
     
     #loss
     parser.add_argument('--gan_loss', type=str, default='ls')
+    parser.add_argument('--lambda_cls', type=str, default=1.)
+    parser.add_argument('--lambda_adv', type=str, default=1.)
+    
+    #optimization
+    parser.add_argument('--beta1', type=str, default=0.9)
+    parser.add_argument('--beta2', type=str, default=0.99)
+    parser.add_argument('--lr', type=str, default=1e-4)
     opt, _ = parser.parse_known_args()
     return opt
 
