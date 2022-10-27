@@ -108,8 +108,7 @@ class AdaptFCN(tf.keras.Model):
     #predict mask
     ms_pred, fs = self.call(xs)
     mt_pred, ft = self.call(xt)
-
-    #loss functions
-    l_cls = crossentropy(ms_pred, ms)
     
-    return {'l_cls':l_cls}
+    #compute metrics
+    
+    return {}
