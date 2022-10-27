@@ -1,5 +1,5 @@
 from tensorflow.keras.applications.vgg16 import *
-from tensorflow.keras import layers
+from tensorflow.keras import layers, metrics
 
 
 class FCN(tf.keras.Model):
