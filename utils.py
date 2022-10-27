@@ -104,7 +104,7 @@ class VisualizeCallback(callbacks.Callback):
         titles = ['source', 'source pred', 'target', 'target pred']
         for i in range(self.opt.num_samples):
             for j, x in enumerate([xs, ms_pred, xt, mt_pred]):
-                if not j%2:
+                if j%2:
                     ax[i, j].imshow(x[i], cmap='gray')
                 else:
                     ax[i, j].imshow(x[i])
