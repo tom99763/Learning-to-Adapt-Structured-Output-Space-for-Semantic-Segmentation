@@ -68,18 +68,18 @@ def create_dataset(opt):
     return ds_train, ds_val
 
 def create_callbacks(opt, sample):
-    if not os.path.exists(f'{opt.ckpt_dir}/AdaptFCN'):
-        os.makedirs(f'{opt.ckpt_dir}/AdaptFCN')
+    if not os.path.exists(f'{opt.ckpt_dir}/AdaptFCN_{opt.lambda_adv}'):
+        os.makedirs(f'{opt.ckpt_dir}/AdaptFCN_{opt.lambda_adv}')
         
-    if not os.path.exists(f'{opt.result_dir}/AdaptFCN'):
-        os.makedirs(f'{opt.result_dir}/AdaptFCN')
+    if not os.path.exists(f'{opt.result_dir}/AdaptFCN_{opt.lambda_adv}'):
+        os.makedirs(f'{opt.result_dir}/AdaptFCN_{opt.lambda_adv}')
         
     checkpoint = callbacks.ModelCheckpoint(
-        filepath=f'{opt.ckpt_dir}/AdaptFCN/AdaptFCN',
+        filepath=f'{opt.ckpt_dir}/AdaptFCN_{opt.lambda_adv}/AdaptFCN',
         save_weights_only=True)
     
     history = callbacks.CSVLogger(
-        f"{opt.result_dir}/AdaptFCN/AdaptFCN.csv",
+        f"{opt.result_dir}/AdaptFCN_{opt.lambda_adv}/AdaptFCN.csv",
         separator=",",
         append=False)
     
@@ -111,7 +111,7 @@ class VisualizeCallback(callbacks.Callback):
                 ax[i, j].axis('off')
                 ax[i, j].set_title(titles[j])
         
-        if not os.path.exists(f'{opt.result_dir}/AdaptFCN/results'):
-            os.makedir(f'{opt.result_dir}/AdaptFCN/results')
+        if not os.path.exists(f'{self.opt.result_dir}/AdaptFCN_{self.opt.lambda_adv}/results'):
+            os.makedir(f'{self.opt.result_dir}/AdaptFCN_{self.opt.lambda_adv}/results')
             
-        plt.savefig(f'{self.opt.result_dir}/AdaptFCN/results/{epoch}.png')
+        plt.savefig(f'{self.opt.result_dir}/AdaptFCN_{self.opt.lambda_adv}/results/{epoch}.png')
