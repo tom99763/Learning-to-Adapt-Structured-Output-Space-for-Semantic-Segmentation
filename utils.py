@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorflow.keras import callbacks
 import os 
 from sklearn.model_selection import train_test_split as ttp
 AUTOTUNE = tf.data.experimental.AUTOTUNE
@@ -65,4 +66,24 @@ def create_dataset(opt):
     )
     return ds_train, ds_val
 
-  
+def create_callbacks(opt, sample):
+    if not os.path.exists(f'{opt.ckpt_dir}/AdaptFCN'):
+        os.makedirs(f'{opt.ckpt_dir}/AdaptFCN')
+        
+    if not os.path.exists(f'{opt.result_dir}/AdaptFCN'):
+        os.makedirs(f'{opt.result_dir}/AdaptFCN')
+        
+    checkpoint = callbacks.ModelCheckpoint(
+        filepath=f'{opt.ckpt_dir}/AdaptFCN/AdaptFCN',
+        save_weights_only=True)
+    
+    history = callbacks.CSVLogger(
+        f"{opt.result_dir}/AdaptFCN/AdaptFCN.csv",
+        separator=",",
+        append=False)
+    
+    visualization = VisualizeRefCallback()
+    
+    callbacks_ = [checkpoint, history, isualization]
+    
+    return callbacks_
