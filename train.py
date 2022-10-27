@@ -1,5 +1,6 @@
 import argparse
 from utils import *
+from models import AdaptFCN
 
 def parse_opt():
     parser = argparse.ArgumentParser()
