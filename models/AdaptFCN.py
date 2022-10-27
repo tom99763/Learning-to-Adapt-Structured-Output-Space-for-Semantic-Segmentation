@@ -71,6 +71,10 @@ class AdaptFCN(tf.keras.Model):
     m_pred, f =self.fcn(x, training=training)
     return m_pred, f
   
+  @staticmethod
+  def metrics(self):
+    return [metrics.MeanIoU(opt.num_classes), metrics.MeanIoU(opt.num_classes)]
+  
   @tf.function
   def train_step(self, source, target):
     xs, ms = source
@@ -97,8 +101,14 @@ class AdaptFCN(tf.keras.Model):
     self.optimizer[1].apply_gradients(zip(d_grad, self.disc.trainable_weights))
     
     #compute metrics
-    
-    return {'l_cls':l_cls, 'l_g':l_g, 'l_d':l_d}
+    history = {'l_cls':l_cls, 'l_g':l_g, 'l_d':l_d}
+    ms_pred, fs = self.call(xs)
+    mt_pred, ft = self.call(xt)
+    self.metrics[0].update_state(ms, tf.nn.softmax(ms_pred, axis=-1))
+    self.metrics[1].update_state(mt, tf.nn.softmax(mt_pred, axis=-1))
+    history['mIoU_source']= self.metrics[0].result()
+    history['mIoU_target']= self.metrics[1].result()
+    return history
   
   @tf.function
   def test_step(self, source, target):
@@ -110,5 +120,11 @@ class AdaptFCN(tf.keras.Model):
     mt_pred, ft = self.call(xt)
     
     #compute metrics
-    
-    return {}
+    history = {}
+    ms_pred, fs = self.call(xs)
+    mt_pred, ft = self.call(xt)
+    self.metrics[0].update_state(ms, tf.nn.softmax(ms_pred, axis=-1))
+    self.metrics[1].update_state(mt, tf.nn.softmax(mt_pred, axis=-1))
+    history['mIoU_source']= self.metrics[0].result()
+    history['mIoU_target']= self.metrics[1].result()
+    return history
