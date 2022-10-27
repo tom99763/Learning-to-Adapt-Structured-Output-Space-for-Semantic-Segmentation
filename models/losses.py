@@ -4,7 +4,7 @@ from tensorflow.keras import losses
 bce = losses.BinaryCrossentropy(from_logits=True)
 
 def crossentropy(y_true, y_pred):
-  return losses.SparseCategoricalCrossentropy(from_logits=True)(y_true, y_pred)
+  return losses.CategoricalCrossentropy(from_logits=True)(y_true, y_pred)
 
 def adversarial_loss(critic_real, critic_fake, loss_tyle='logistic'):
   if loss_type == 'logistic':
