@@ -9,6 +9,7 @@ def parse_opt():
     parser.add_argument('--source_pth', type=str, default='./datasets/crack/source')
     parser.add_argument('--target_pth', type=str, default='./datasets/crack/target')
     parser.add_argument('--ckpt_dir', type=str, default='./checkpoints')
+    parser.add_argument('--result_dir', type=str, default='./results')
     parser.add_argument('--val_size', type=str, default=0.2)
     parser.add_argument('--seed', type=str, default=999)
     parser.add_argument('--batch_size', type=str, default=32)
@@ -46,7 +47,7 @@ def main(opt):
         x=ds_train,
         validation_data=ds_val,
         epochs=opt.num_epochs,
-        callbacks
+        callbacks=callbacks
     )
 
 if __name__ == '__main__':
