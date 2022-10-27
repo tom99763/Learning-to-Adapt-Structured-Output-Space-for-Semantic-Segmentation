@@ -16,6 +16,9 @@ def parse_opt():
     parser.add_argument('--base', type=str, default=64)
     parser.add_argument('--num_classes', type=str, default=2)
     parser.add_argument('--num_downsamples', type=str, default=4)
+    
+    #loss
+    parser.add_argument('--gan_loss', type=str, default='ls')
     opt, _ = parser.parse_known_args()
     return opt
 
