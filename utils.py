@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow.keras import callbacks
 import os 
 from sklearn.model_selection import train_test_split as ttp
+import matplotlib.pyplot as plt
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 def read_pair(img_pth, mask_pth, img_size):
@@ -82,8 +83,32 @@ def create_callbacks(opt, sample):
         separator=",",
         append=False)
     
-    visualization = VisualizeRefCallback()
+    visualization = VisualizeCallback(opt, sample)
     
     callbacks_ = [checkpoint, history, visualization]
     
     return callbacks_
+
+class VisualizeCallback(callbacks.Callback):
+    def __init__(self, opt, sample):
+        super().__init__()
+        self.opt=opt
+        self.sample=sample
+        
+    def on_epoch_end(self, epoch, logs=None):
+        xs, ms, xt, mt = self.sample
+        ms_pred = tf.math.argmax(self.model.fcn(xs[:self.opt.num_samples]), axis=-1, output_type=tf.float32)[..., None]
+        mt_pred = tf.math.argmax(self.model.fcn(xt[:self.opt.num_samples]), axis=-1, output_type=tf.float32)[..., None]
+        
+        fig, ax = plt.subplots(nrows = self.opt.num_samples, ncols = 4, figsize = (8, 8))
+        titles = ['source', 'source pred', 'target', 'target pred']
+        for i in range(self.opt.num_samples):
+            for j, x in enumerate([xs, ms_pred, xt, mt_pred]):
+                if not j%2:
+                    ax[i, j].imshow(x[i], cmap='gray')
+                else:
+                    ax[i, j].imshow(x[i])
+                ax[i, j].axis('off')
+                ax[i, j].set_title(titles[j])
+                
+        plt.savefig(f'{self.opt.result_dir}/AdaptFCN.png')
