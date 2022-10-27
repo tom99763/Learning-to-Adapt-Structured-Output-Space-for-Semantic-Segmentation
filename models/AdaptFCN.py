@@ -40,7 +40,7 @@ class FCN(tf.keras.Model):
     merge2 = tf.add(f3_conv1, merge1_x2) #fuse f3 & f4 * f5
     outputs = layers.Conv2DTranspose(filters=opt.num_classes, kernel_size=16, strides=8,
                               padding='same', activation=None)(merge2)
-    return tf.keras.Model(inputs=inputs, outputs=[outputs, f5])
+    return tf.keras.Model(inputs=inputs, outputs=outputs)
   
   
 class Discriminator(tf.keras.Model):
@@ -80,12 +80,12 @@ class AdaptFCN(tf.keras.Model):
     xt, mt = target
     with tf.GradientTape(persistent=True) as tape:
       #predict mask
-      ms_pred, fs = self.call(xs, True)
-      mt_pred, ft = self.call(xt, True)
+      ms_pred = self.call(xs, True)
+      mt_pred = self.call(xt, True)
       
       #predict domain
-      critic_source = self.disc(fs)
-      critic_target = self.disc(ft)
+      critic_source = self.disc(tf.nn.softmax(ms_pred, axis=-1))
+      critic_target = self.disc(tf.nn.softmax(mt_pred, axis=-1))
       
       #loss functions
       l_cls = crossentropy(ms_pred, ms)
@@ -101,8 +101,8 @@ class AdaptFCN(tf.keras.Model):
     
     #compute metrics
     history = {'l_cls':l_cls, 'l_g':l_g, 'l_d':l_d}
-    ms_pred, fs = self.call(xs)
-    mt_pred, ft = self.call(xt)
+    ms_pred = self.call(xs)
+    mt_pred = self.call(xt)
     self.metrics[0].update_state(ms, tf.nn.softmax(ms_pred, axis=-1))
     self.metrics[1].update_state(mt, tf.nn.softmax(mt_pred, axis=-1))
     history['mIoU_source']= self.metrics[0].result()
@@ -117,8 +117,8 @@ class AdaptFCN(tf.keras.Model):
     
     #compute metrics
     history = {}
-    ms_pred, fs = self.call(xs)
-    mt_pred, ft = self.call(xt)
+    ms_pred = self.call(xs)
+    mt_pred = self.call(xt)
     self.metrics[0].update_state(ms, tf.nn.softmax(ms_pred, axis=-1))
     self.metrics[1].update_state(mt, tf.nn.softmax(mt_pred, axis=-1))
     history['mIoU_source']= self.metrics[0].result()
