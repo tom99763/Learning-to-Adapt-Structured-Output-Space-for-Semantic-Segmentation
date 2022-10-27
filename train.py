@@ -6,8 +6,8 @@ from tensorflow.keras import optimizers
 def parse_opt():
     parser = argparse.ArgumentParser()
     #dataset & dirs
-    parser.add_argument('--source_pth', type=str, default='./dataset/crack/source')
-    parser.add_argument('--target_pth', type=str, default='./dataset/crack/target')
+    parser.add_argument('--source_pth', type=str, default='./datasets/crack/source')
+    parser.add_argument('--target_pth', type=str, default='./datasets/crack/target')
     parser.add_argument('--ckpt_dir', type=str, default='./checkpoints')
     parser.add_argument('--val_size', type=str, default=0.2)
     parser.add_argument('--seed', type=str, default=999)
