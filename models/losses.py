@@ -14,8 +14,4 @@ def adversarial_loss(critic_real, critic_fake, loss_tyle='logistic'):
     d_loss = tf.reduce_mean((1-critic_real) **2 + critic_fake ** 2)
     g_loss = tf.reduce_mean((1-critic_fake) ** 2)
     
-    
-  elif loss_type == 'wgan':
-    pass
-    
   return d_loss, g_loss
