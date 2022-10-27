@@ -68,7 +68,8 @@ class AdaptFCN(tf.keras.Model):
     self.opt = opt
     
   def call(self, x, training=False):
-    return self.fcn(x, training=training)
+    m_pred, f =self.fcn(x, training=training)
+    return m_pred, f
   
   @tf.function
   def train_step(self, source, target):
@@ -76,8 +77,8 @@ class AdaptFCN(tf.keras.Model):
     xt, mt = target
     with tf.GradientTape(persistent=True) as tape:
       #predict mask
-      ms_pred, fs = self.fcn(xs, True)
-      _, ft = self.fcn(xt, True)
+      ms_pred, fs = self.call(xs, True)
+      mt_pred, ft = self.call(xt, True)
       
       #predict domain
       critic_source = self.disc(fs)
@@ -86,16 +87,29 @@ class AdaptFCN(tf.keras.Model):
       #loss functions
       l_cls = crossentropy(ms_pred, ms)
       l_d, l_g = adversarial_loss(critic_source, critic_target, self.opt.gan_loss)
-      g_loss = l_cls + self.lambda_adv * l_g
-      d_loss = l_d
+      g_loss = self.opt.lambda_cls * l_cls + self.opt.lambda_adv * l_g
+      d_loss = self.opt.lambda_adv * l_d
       
     g_grad=tape.gradient(g_loss, self.fcn.trainable_weights)
     d_grad=tape.gradient(d_loss, self.disc.trainable_weights)
     
     self.optimizer[0].apply_gradients(zip(g_grad, self.fcn.trainable_weights))
     self.optimizer[1].apply_gradients(zip(d_grad, self.disc.trainable_weights))
+    
+    #compute metrics
+    
     return {'l_cls':l_cls, 'l_g':l_g, 'l_d':l_d}
   
   @tf.function
   def test_step(self, source, target):
-    return {}
+    xs, ms = source
+    xt, mt = target
+    
+    #predict mask
+    ms_pred, fs = self.call(xs)
+    mt_pred, ft = self.call(xt)
+
+    #loss functions
+    l_cls = crossentropy(ms_pred, ms)
+    
+    return {'l_cls':l_cls}
