@@ -12,7 +12,7 @@ def parse_opt():
     parser.add_argument('--result_dir', type=str, default='./results')
     parser.add_argument('--val_size', type=str, default=0.2)
     parser.add_argument('--seed', type=str, default=999)
-    parser.add_argument('--batch_size', type=str, default=32)
+    parser.add_argument('--batch_size', type=str, default=16)
     parser.add_argument('--img_size', type=str, default=224)
     
     #network
