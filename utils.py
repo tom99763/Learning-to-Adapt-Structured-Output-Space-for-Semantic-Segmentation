@@ -84,6 +84,6 @@ def create_callbacks(opt, sample):
     
     visualization = VisualizeRefCallback()
     
-    callbacks_ = [checkpoint, history, isualization]
+    callbacks_ = [checkpoint, history, visualization]
     
     return callbacks_
