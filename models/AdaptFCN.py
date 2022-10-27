@@ -30,16 +30,16 @@ class FCN(tf.keras.Model):
                       activation=None)(f5_drop2)
     
     #merge feautres
-    f5_conv3_x2 = layers.Conv2DTranspose(filters=3, kernel_size=4, strides=2,
+    f5_conv3_x2 = layers.Conv2DTranspose(filters=2, kernel_size=4, strides=2,
                                 use_bias=False, padding='same', activation='relu')(f5)
-    f4_conv1 = layers.Conv2D(filters=3, kernel_size=1, padding='same', activation=None)(f4)
+    f4_conv1 = layers.Conv2D(filters=2, kernel_size=1, padding='same', activation=None)(f4)
     merge1 = tf.add([f4_conv1, f5_conv3_x2])
-    merge1_x2 = layers.Conv2DTranspose(filters=3, kernel_size=4, strides=2,
+    merge1_x2 = layers.Conv2DTranspose(filters=2, kernel_size=4, strides=2,
                                 use_bias=False, padding='same', activation='relu')(merge1)
     f3_conv1 = layers.Conv2D(filters=3, kernel_size=1, padding='same', activation=None)(f3)
     merge2 = tf.add([f3_conv1, merge1_x2])
     
-    outputs = layers.Conv2DTranspose(filters=3, kernel_size=16, strides=8,
+    outputs = layers.Conv2DTranspose(filters=2, kernel_size=16, strides=8,
                               padding='same', activation=None)(merge2)
     return tf.keras.Model(inputs=inputs, outputs=outputs)
   
