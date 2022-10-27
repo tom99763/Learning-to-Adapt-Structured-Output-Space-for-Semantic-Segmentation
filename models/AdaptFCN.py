@@ -71,7 +71,6 @@ class AdaptFCN(tf.keras.Model):
     m_pred, f =self.fcn(x, training=training)
     return m_pred, f
   
-  @staticmethod
   def metrics(self):
     return [metrics.MeanIoU(opt.num_classes), metrics.MeanIoU(opt.num_classes)]
   
