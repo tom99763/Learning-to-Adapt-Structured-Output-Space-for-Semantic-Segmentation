@@ -1,4 +1,5 @@
 import argparse
+from utils import *
 
 def parse_opt():
     parser = argparse.ArgumentParser()
@@ -13,9 +14,8 @@ def parse_opt():
 
 
 def main(opt):
-    return 
-  
-    
+    ds_train, ds_val = create_dataset(opt)
+
 if __name__ == '__main__':
-  opt = parse_opt()
-  main(opt)
+    opt = parse_opt()
+    main(opt)
