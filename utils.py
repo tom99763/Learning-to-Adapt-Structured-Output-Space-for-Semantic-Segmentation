@@ -111,7 +111,7 @@ class VisualizeCallback(callbacks.Callback):
                 ax[i, j].axis('off')
                 ax[i, j].set_title(titles[j])
         
-        if not os.path.exists(f'{opt.result_dir}/AdaptFCN/result'):
-            os.makedir(f'{opt.result_dir}/AdaptFCN/result')
+        if not os.path.exists(f'{opt.result_dir}/AdaptFCN/results'):
+            os.makedir(f'{opt.result_dir}/AdaptFCN/results')
             
-        plt.savefig(f'{self.opt.result_dir}/AdaptFCN.png')
+        plt.savefig(f'{self.opt.result_dir}/AdaptFCN/results/{epoch}.png')
