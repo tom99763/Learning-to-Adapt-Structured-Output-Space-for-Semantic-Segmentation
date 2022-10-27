@@ -20,16 +20,16 @@ class FCN(tf.keras.Model):
     f5 = vgg16.get_layer('block5_pool').output  
     
     # Replacing VGG dense layers by convolutions
-    f5_conv1 = layers.Conv2D(filters=4086, kernel_size=7, padding='same',
+    f5_conv1 = layers.Conv2D(filters=4096, kernel_size=7, padding='same',
                       activation='relu')(f5)
     f5_drop1 = layers.Dropout(0.5)(f5_conv1)
-    f5_conv2 = layers.Conv2D(filters=4086, kernel_size=1, padding='same',
+    f5_conv2 = layers.Conv2D(filters=4096, kernel_size=1, padding='same',
                       activation='relu')(f5_drop1)
     f5_drop2 = layers.Dropout(0.5)(f5_conv2)
     f5_conv3 = layers.Conv2D(filters=ch_out, kernel_size=1, padding='same',
                       activation=None)(f5_drop2)
     
-    #merge feautres
+    #merge feautres & prediction
     f5_conv3_x2 = layers.Conv2DTranspose(filters=2, kernel_size=4, strides=2,
                                 use_bias=False, padding='same', activation='relu')(f5)
     f4_conv1 = layers.Conv2D(filters=2, kernel_size=1, padding='same', activation=None)(f4)
