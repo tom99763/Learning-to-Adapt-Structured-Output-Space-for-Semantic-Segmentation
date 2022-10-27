@@ -6,8 +6,8 @@ from tensorflow.keras import optimizers
 def parse_opt():
     parser = argparse.ArgumentParser()
     #dataset & dirs
-    parser.add_argument('--source_pth', type=str, default='../datasets/crack/source')
-    parser.add_argument('--target_pth', type=str, default='../datasets/crack/target')
+    parser.add_argument('--source_pth', type=str, default='./datasets/crack/source')
+    parser.add_argument('--target_pth', type=str, default='./datasets/crack/target')
     parser.add_argument('--ckpt_dir', type=str, default='./checkpoints')
     parser.add_argument('--result_dir', type=str, default='./results')
     parser.add_argument('--val_size', type=str, default=0.2)
@@ -37,7 +37,7 @@ def parse_opt():
 
 def main(opt):
     ds_train, ds_val = create_dataset(opt)
-    adaptfcn = AdaptFCN(opt)
+    adaptfcn = AdaptFCN.AdaptFCN(opt)
     adaptfcn.compile(optimizer = [
         optimizers.Adam(learning_rate=opt.lr, beta_1=opt.beta_1, beta_2=opt.beta_2),
         optimizers.Adam(learning_rate=opt.lr, beta_1=opt.beta_1, beta_2=opt.beta_2)
