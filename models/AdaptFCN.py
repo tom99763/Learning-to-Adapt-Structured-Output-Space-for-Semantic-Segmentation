@@ -108,6 +108,7 @@ class AdaptFCN(tf.keras.Model):
     self.metrics[1].update_state(mt, tf.nn.softmax(mt_pred, axis=-1))
     history['mIoU_source']= self.metrics[0].result()
     history['mIoU_target']= self.metrics[1].result()
+    self.reset_metrics()
     return history
   
   @tf.function
@@ -127,4 +128,5 @@ class AdaptFCN(tf.keras.Model):
     self.metrics[1].update_state(mt, tf.nn.softmax(mt_pred, axis=-1))
     history['mIoU_source']= self.metrics[0].result()
     history['mIoU_target']= self.metrics[1].result()
+    self.reset_metrics()
     return history
