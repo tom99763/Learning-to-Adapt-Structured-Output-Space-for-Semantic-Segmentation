@@ -33,7 +33,7 @@ class FCN(tf.keras.Model):
     f5_conv3_x2 = layers.Conv2DTranspose(filters=opt.num_classes, kernel_size=4, strides=2,
                                 use_bias=False, padding='same', activation='relu')(f5)  #f5 feature
     f4_conv1 = layers.Conv2D(filters=opt.num_classes, kernel_size=1, padding='same', activation=None)(f4) #f4 feature
-    merge1 = tf.add(f4_conv1, f5_conv3_x2) #fuse the result of f4 & f5 feautre
+    merge1 = tf.add(f4_conv1, f5_conv3_x2) #fuse the result of f4 & f5 feature
     merge1_x2 = layers.Conv2DTranspose(filters=opt.num_classes, kernel_size=4, strides=2,
                                 use_bias=False, padding='same', activation='relu')(merge1) #f4 & f5 fused 
     f3_conv1 = layers.Conv2D(filters=opt.num_classes, kernel_size=1, padding='same', activation=None)(f3) #f3
@@ -114,10 +114,6 @@ class AdaptFCN(tf.keras.Model):
   def test_step(self, source, target):
     xs, ms = source
     xt, mt = target
-    
-    #predict mask
-    ms_pred, fs = self.call(xs)
-    mt_pred, ft = self.call(xt)
     
     #compute metrics
     history = {}
