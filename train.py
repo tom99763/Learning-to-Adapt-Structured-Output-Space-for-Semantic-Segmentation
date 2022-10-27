@@ -8,7 +8,7 @@ def parse_opt():
     parser.add_argument('--val_size', type=str, default=0.2)
     parser.add_argument('--seed', type=str, default=999)
     parser.add_argument('--batch_size', type=str, default=32)
-    parser.add_argument('--img_size', type=str, default=224)
+    parser.add_argument('--img_size', type=str, default=512)
     opt, _ = parser.parse_known_args()
     return opt
 
