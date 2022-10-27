@@ -31,7 +31,7 @@ class FCN(tf.keras.Model):
     
     #merge feautres & prediction
     f5_conv3_x2 = layers.Conv2DTranspose(filters=opt.num_classes, kernel_size=4, strides=2,
-                                use_bias=False, padding='same', activation='relu')(f5)  #f5 feature
+                                use_bias=False, padding='same', activation='relu')(f5_conv3)  #f5 feature
     f4_conv1 = layers.Conv2D(filters=opt.num_classes, kernel_size=1, padding='same', activation=None)(f4) #f4 feature
     merge1 = tf.add(f4_conv1, f5_conv3_x2) #fuse the result of f4 & f5 feature
     merge1_x2 = layers.Conv2DTranspose(filters=opt.num_classes, kernel_size=4, strides=2,
