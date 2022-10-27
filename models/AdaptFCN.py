@@ -90,10 +90,10 @@ class AdaptFCN(tf.keras.Model):
             critic_target = self.disc(tf.nn.softmax(mt_pred, axis=-1))
 
             # loss functions
-            l_cls = crossentropy(ms_pred, ms)
+            l_cls = crossentropy(ms, ms_pred)
             l_d, l_g = adversarial_loss(critic_source, critic_target, self.opt.gan_loss)
             g_loss = self.opt.lambda_cls * l_cls + self.opt.lambda_adv * l_g
-            d_loss = self.opt.lambda_adv * l_d
+            d_loss = l_d
 
         g_grad = tape.gradient(g_loss, self.fcn.trainable_weights)
         d_grad = tape.gradient(d_loss, self.disc.trainable_weights)
@@ -105,8 +105,8 @@ class AdaptFCN(tf.keras.Model):
         history = {'l_cls': l_cls, 'l_g': l_g, 'l_d': l_d}
         ms_pred = self.call(xs)
         mt_pred = self.call(xt)
-        self.metrics_[0].update_state(ms, tf.nn.softmax(ms_pred, axis=-1))
-        self.metrics_[1].update_state(mt, tf.nn.softmax(mt_pred, axis=-1))
+        self.metrics_[0].update_state(ms, tf.argmax(ms_pred, axis=-1))
+        self.metrics_[1].update_state(mt, tf.argmax(mt_pred, axis=-1))
         history['mIoU_source'] = self.metrics_[0].result()
         history['mIoU_target'] = self.metrics_[1].result()
         self.reset_metrics()
@@ -122,8 +122,8 @@ class AdaptFCN(tf.keras.Model):
         history = {}
         ms_pred = self.call(xs)
         mt_pred = self.call(xt)
-        self.metrics_[0].update_state(ms, tf.nn.softmax(ms_pred, axis=-1))
-        self.metrics_[1].update_state(mt, tf.nn.softmax(mt_pred, axis=-1))
+        self.metrics_[0].update_state(ms, tf.argmax(ms_pred, axis=-1))
+        self.metrics_[1].update_state(mt, tf.argmax(mt_pred, axis=-1))
         history['mIoU_source'] = self.metrics_[0].result()
         history['mIoU_target'] = self.metrics_[1].result()
         self.reset_metrics()
