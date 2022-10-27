@@ -110,5 +110,8 @@ class VisualizeCallback(callbacks.Callback):
                     ax[i, j].imshow(x[i])
                 ax[i, j].axis('off')
                 ax[i, j].set_title(titles[j])
-                
+        
+        if not os.path.exists(f'{opt.result_dir}/AdaptFCN/result'):
+            os.makedir(f'{opt.result_dir}/AdaptFCN/result')
+            
         plt.savefig(f'{self.opt.result_dir}/AdaptFCN.png')
