@@ -68,8 +68,8 @@ class AdaptFCN(tf.keras.Model):
     self.opt = opt
     
   def call(self, x, training=False):
-    m_pred, f =self.fcn(x, training=training)
-    return m_pred, f
+    m_pred =self.fcn(x, training=training)
+    return m_pred
   
   def metrics(self):
     return [metrics.MeanIoU(opt.num_classes), metrics.MeanIoU(opt.num_classes)]
