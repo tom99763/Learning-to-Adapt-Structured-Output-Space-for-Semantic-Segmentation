@@ -10,7 +10,12 @@ def parse_opt():
     parser.add_argument('--img_size', type=str, default=224)
     opt, _ = parser.parse_known_args()
     return opt
+
+
+def main(opt):
+    return 
   
-  
+    
 if __name__ == '__main__':
   opt = parse_opt()
+  main(opt)
